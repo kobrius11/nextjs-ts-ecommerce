@@ -20,3 +20,12 @@ Content-Type: application/json
 {
     "productId": "10"
 }
+
+###
+
+DELETE http://localhost:3000/api/users/1/cart
+Content-Type: application/json
+
+{
+    "productId": "10"
+}

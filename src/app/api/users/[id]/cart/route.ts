@@ -60,8 +60,28 @@ export async function POST(request: NextRequest, { params }: props) {
   }
 
   return Response.json(usersCartData, {
+    status: 201,  
     headers: {
       "Content-Type": "application/json",
     },
   });
+}
+
+export async function DELETE(request: NextRequest, { params }: props) {
+  const { id } = await params;
+  const productId = (await request.json()).productId;
+  
+
+  const user = usersCartData.find(u => u.userId === id);
+  if (user) {
+    user.cartItems = user.cartItems.filter(item => productId !== item)
+  }
+
+  return Response.json(usersCartData, {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+
 }
