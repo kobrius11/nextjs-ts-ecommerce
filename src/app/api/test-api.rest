@@ -7,3 +7,16 @@ GET http://localhost:3000/api/products
 ###
 
 GET http://localhost:3000/api/products/1
+
+###
+
+GET http://localhost:3000/api/users/1/cart
+
+###
+
+POST http://localhost:3000/api/users/1/cart
+Content-Type: application/json
+
+{
+    "productId": "10"
+}

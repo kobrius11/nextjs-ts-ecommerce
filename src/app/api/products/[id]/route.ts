@@ -2,12 +2,12 @@ import { NextRequest } from "next/server";
 import { productData } from "@/data/products-data";
 
 interface props {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export async function GET(request: NextRequest, { params }: props) {
-  const productId = params.id;
-  const product = productData.find((p) => p.id === productId);
+  const { id } = await params;
+  const product = productData.find((p) => p.id === id);
 
     if (!product) {
         return new Response('Not Found', {
