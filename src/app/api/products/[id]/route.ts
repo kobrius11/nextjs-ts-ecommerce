@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { productData } from "@/data/products-data";
+import { connectToDb } from "../../db";
 
 interface props {
   params: Promise<{ id: string }>;
@@ -7,7 +7,8 @@ interface props {
 
 export async function GET(request: NextRequest, { params }: props) {
   const { id } = await params;
-  const product = productData.find((p) => p.id === id);
+  const { db } = await connectToDb();
+  const product = await db.collection('products').findOne({ id: id });
 
     if (!product) {
         return new Response('Not Found', {
