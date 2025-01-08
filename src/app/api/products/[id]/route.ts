@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { connectToDb } from "../../db";
+import { connectToDb } from "@/lib/db";
 
 interface props {
   params: Promise<{ id: string }>;
