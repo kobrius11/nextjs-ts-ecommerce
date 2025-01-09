@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { product, productData } from "@/data/products-data";
+import { BASE_URL } from "@/lib/settings";
 
 interface ProductDetailPageProps {
   params: Promise<{ id: string }>;
@@ -9,9 +9,8 @@ export default async function ProductDetailPage({
   params,
 }: ProductDetailPageProps) {
   const { id } = await params;
-  const prod: product | undefined = productData.find(
-    (product) => product.id === id
-  );
+  const productPath = new URL(`/api/products/${id}`, BASE_URL);
+  const prod = await (await fetch(productPath.toString())).json();
 
   return (
     <>
