@@ -36,6 +36,6 @@ POST http://localhost:3000/api/users/create
 Content-Type: application/json 
 
 {
-    "username": "k",
-    "password": "a" 
+    "username": "kobrius",
+    "password": "aaa" 
 }
