@@ -8,7 +8,7 @@ interface userDetails {
 
 export async function POST(request: NextRequest) {
   const body: userDetails = await request.json();
-  const { username, password } = { ...body };
+  const { username, password } = body;
   const isDuplicate = await (await connectToDb()).db
     .collection("users")
     .findOne({ username: username });
