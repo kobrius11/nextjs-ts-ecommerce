@@ -17,5 +17,4 @@ export async function createUser (username: string, password: string) {
     throw new Error(errData.message || "Failed to create User");
   }
 
-  console.log(response.text())
 }
