@@ -20,5 +20,5 @@ export async function authUser(username: string, password: string) {
     throw new Error(errData.message || "Failed to login");
   }
 
-  console.log(response.text());
+  return (await response.json()).userId
 }

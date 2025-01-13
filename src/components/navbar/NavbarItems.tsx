@@ -4,13 +4,21 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import UserCard from "./UserCard";
+import { BASE_URL } from "@/lib/settings";
+
+
 
 export default function NavbarItems() {
   const [username, setUsername] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedUsername = localStorage.getItem("username");
-    setUsername(storedUsername);
+    const storedUserId = localStorage.getItem("userId");
+    if (!storedUserId) return;
+    const fetchUser = async () => {
+      const user = await (await fetch(new URL(`/api/users/${storedUserId}`, BASE_URL))).json()
+      setUsername(user.username)
+    } 
+    fetchUser()
   }, []);
 
   return (
@@ -54,4 +62,3 @@ export default function NavbarItems() {
     </Navbar>
   );
 }
-

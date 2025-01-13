@@ -3,13 +3,13 @@ import { usersCartData, usersCartDataType } from "@/data/usersCartsData";
 import { productData } from "@/data/products-data";
 
 interface props {
-  params: Promise<{ id: string }>;
+  params: Promise<{ userId: string }>;
 }
 
 export async function GET(request: NextRequest, { params }: props) {
-  const { id } = await params;
+  const { userId } = await params;
 
-  const userCartData = usersCartData.find((user) => user.userId === id);
+  const userCartData = usersCartData.find((user) => user.userId === userId);
 
   if (!userCartData) {
     return new Response(JSON.stringify([]), {
@@ -46,7 +46,7 @@ interface cartBody {
 }
 
 export async function POST(request: NextRequest, { params }: props) {
-  const { id } = await params;
+  const { userId } = await params;
 
   const body: cartBody = await request.json();
   const productId = body.productId;
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest, { params }: props) {
 
   // const userCart = await (await fetch(`http://localhost:3000/api/users/${id}/cart`)).json()
 
-  const user = usersCartData.find((u) => u.userId === id);
+  const user = usersCartData.find((u) => u.userId === userId);
   if (user) {
     user.cartItems = user.cartItems.concat(productId);
   }
@@ -68,11 +68,11 @@ export async function POST(request: NextRequest, { params }: props) {
 }
 
 export async function DELETE(request: NextRequest, { params }: props) {
-  const { id } = await params;
+  const { userId } = await params;
   const productId = (await request.json()).productId;
   
 
-  const user = usersCartData.find(u => u.userId === id);
+  const user = usersCartData.find(u => u.userId === userId);
   if (user) {
     user.cartItems = user.cartItems.filter(item => productId !== item)
   }

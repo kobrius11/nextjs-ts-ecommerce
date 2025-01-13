@@ -1,5 +1,5 @@
 import LoginForm from "./LoginForm";
-import { authUser } from "./authUser";
+import { authUser } from "@/lib/helper/user/authUser";
 
 export default function LoginPage() {
   return (

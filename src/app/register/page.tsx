@@ -1,5 +1,5 @@
 import RegisterForm from "./RegisterForm";
-import { createUser } from "./createUser";
+import { createUser } from "@/lib/helper/user/createUser";
 
 export default function RegisterPage() {
 

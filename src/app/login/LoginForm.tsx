@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 interface loginFormProps {
-  loginFormSubmitFn: (username: string, password: string) => Promise<void>;
+  loginFormSubmitFn: (username: string, password: string) => Promise<string | null>;
 }
 
 export default function LoginForm({ loginFormSubmitFn }: loginFormProps) {
@@ -19,8 +19,12 @@ export default function LoginForm({ loginFormSubmitFn }: loginFormProps) {
     e.preventDefault();
 
     try {
-      await loginFormSubmitFn(username, password);
-      localStorage.setItem('username', username);
+      const userId = await loginFormSubmitFn(username, password);
+      if (userId) {
+        localStorage.setItem('userId', userId);
+        localStorage.setItem('username', username);
+      };
+      router.refresh();
       router.push("/");
     } catch (err: unknown) {
       setError(err.message);
