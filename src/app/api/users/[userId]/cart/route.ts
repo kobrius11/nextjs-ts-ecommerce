@@ -1,6 +1,10 @@
 import { NextRequest } from "next/server";
-import { usersCartData, usersCartDataType } from "@/data/usersCartsData";
+import { usersCartData} from "@/data/usersCartsData";
 import { productData } from "@/data/products-data";
+import { BASE_URL } from "@/lib/settings";
+import { connectToDb } from "@/lib/db";
+import { ObjectId } from "mongodb";
+
 
 interface props {
   params: Promise<{ userId: string }>;
@@ -8,10 +12,9 @@ interface props {
 
 export async function GET(request: NextRequest, { params }: props) {
   const { userId } = await params;
+  const userData = await (await fetch(new URL(`/api/users/${userId}`, BASE_URL))).json()
 
-  const userCartData = usersCartData.find((user) => user.userId === userId);
-
-  if (!userCartData) {
+  if (!userData.cart) {
     return new Response(JSON.stringify([]), {
       status: 201,
       headers: {
@@ -20,7 +23,7 @@ export async function GET(request: NextRequest, { params }: props) {
     });
   }
 
-  const userProducts = userCartData.cartItems.map((pId) =>
+  const userProducts = userData.cart.map((pId: string) =>
     productData.find((p) => p.id === pId)
   );
 
@@ -50,16 +53,25 @@ export async function POST(request: NextRequest, { params }: props) {
 
   const body: cartBody = await request.json();
   const productId = body.productId;
+  const usersCollection = await (await connectToDb()).db.collection('users');
+  const userData = await usersCollection.findOne(new ObjectId(userId));
+
   // const product = await (await fetch(`http:localhost:3000/api/products/${productId}`)).json()
 
   // const userCart = await (await fetch(`http://localhost:3000/api/users/${id}/cart`)).json()
 
-  const user = usersCartData.find((u) => u.userId === userId);
-  if (user) {
-    user.cartItems = user.cartItems.concat(productId);
+  if (!userData) {
+    return Response.json({ message: "Something went wrong" }, {
+      status: 401,  
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   }
-
-  return Response.json(usersCartData, {
+  const newUserCart = userData.cart.concat(productId);
+  await usersCollection.updateOne({_id: new ObjectId(userId)}, { $set: { cart: newUserCart }})
+  
+  return Response.json({ message: "Cart updated successfully", cart: newUserCart }, {
     status: 201,  
     headers: {
       "Content-Type": "application/json",
@@ -70,18 +82,25 @@ export async function POST(request: NextRequest, { params }: props) {
 export async function DELETE(request: NextRequest, { params }: props) {
   const { userId } = await params;
   const productId = (await request.json()).productId;
-  
+  const usersCollection = (await connectToDb()).db.collection('users');
+  const userData = await usersCollection.findOne(new ObjectId(userId));
 
-  const user = usersCartData.find(u => u.userId === userId);
-  if (user) {
-    user.cartItems = user.cartItems.filter(item => productId !== item)
+  if (!userData) {
+    return Response.json({ message: "Something went wrong" }, {
+      status: 401,  
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   }
+  const newUserCart = userData.cart.filter((item: string) => productId !== item);
+  await usersCollection.updateOne({_id: new ObjectId(userId)}, { $set: { cart: newUserCart }})
 
-  return Response.json(usersCartData, {
+  return Response.json({ message: "Cart updated successfully", cart: newUserCart }, {
     status: 200,
     headers: {
       'Content-Type': 'application/json'
     }
-  })
+  });
 
 }

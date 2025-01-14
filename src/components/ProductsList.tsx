@@ -1,5 +1,3 @@
-import Image from "next/image";
-import Link from "next/link";
 import { product } from "@/data/products-data";
 import ProductCard from "./cards/ProductCard";
 
