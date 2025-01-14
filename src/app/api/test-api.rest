@@ -10,23 +10,18 @@ GET http://localhost:3000/api/products/3
 
 ###
 
-GET http://localhost:3000/api/users/1/cart
-
-###
-
 POST http://localhost:3000/api/users/67802b1cef3f0c3b332d79a6/cart
 Content-Type: application/json
 
 {
     "productId": "10"
 }
-
+ 
 ###
 
 GET http://localhost:3000/api/users/67802b1cef3f0c3b332d79a6/cart
 
 ###
-
 
 DELETE http://localhost:3000/api/users/67802b1cef3f0c3b332d79a6/cart
 Content-Type: application/json
